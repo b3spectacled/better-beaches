@@ -1,4 +1,4 @@
-package com.bespectacled.betterbeaches.surfacebuilder;
+package com.bespectacled.classicbeaches.surfacebuilder;
 
 import java.util.Random;
 import java.util.stream.IntStream;

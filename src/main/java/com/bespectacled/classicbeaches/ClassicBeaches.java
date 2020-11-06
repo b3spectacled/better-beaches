@@ -1,10 +1,10 @@
-package com.bespectacled.betterbeaches;
+package com.bespectacled.classicbeaches;
 
-import com.bespectacled.betterbeaches.surfacebuilder.SurfaceBuilders;
+import com.bespectacled.classicbeaches.surfacebuilder.SurfaceBuilders;
 
 import net.fabricmc.api.ModInitializer;
 
-public class BetterBeaches implements ModInitializer {
+public class ClassicBeaches implements ModInitializer {
     @Override
     public void onInitialize() {
         SurfaceBuilders.register();

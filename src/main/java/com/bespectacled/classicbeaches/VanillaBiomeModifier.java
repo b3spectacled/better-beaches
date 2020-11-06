@@ -1,8 +1,8 @@
-package com.bespectacled.betterbeaches;
+package com.bespectacled.classicbeaches;
 
 import java.util.function.Predicate;
 
-import com.bespectacled.betterbeaches.surfacebuilder.SurfaceBuilders;
+import com.bespectacled.classicbeaches.surfacebuilder.SurfaceBuilders;
 import com.google.common.collect.ImmutableList;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -59,6 +59,6 @@ public class VanillaBiomeModifier {
         BiomeModifications.addFeature(
             allButDesertSelector, 
             GenerationStep.Feature.UNDERGROUND_ORES, 
-            RegistryKey.of(Registry.CONFIGURED_FEATURE_WORLDGEN, new Identifier("betterbeaches", "ore_clay")));
+            RegistryKey.of(Registry.CONFIGURED_FEATURE_WORLDGEN, new Identifier("classicbeaches", "ore_clay")));
     }
 }

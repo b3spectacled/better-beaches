@@ -1,4 +1,4 @@
-package com.bespectacled.betterbeaches.surfacebuilder;
+package com.bespectacled.classicbeaches.surfacebuilder;
 
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;

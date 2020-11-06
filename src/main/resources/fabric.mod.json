@@ -1,29 +1,29 @@
 {
   "schemaVersion": 1,
-  "id": "betterbeaches",
+  "id": "classicbeaches",
   "version": "${version}",
 
-  "name": "Better Beaches",
+  "name": "Classic Beaches",
   "description": "Classic beaches in modern vanilla Minecraft.",
   "authors": [
     "B3spectacled"
   ],
   "contact": {
     "homepage": "https://github.com/b3spectacled/",
-    "sources": "https://github.com/b3spectacled/better-beaches"
+    "sources": "https://github.com/b3spectacled/classic-beaches"
   },
 
   "license": "LGPLv3",
-  "icon": "assets/betterbeaches/icon.png",
+  "icon": "assets/classicbeaches/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.bespectacled.betterbeaches.BetterBeaches"
+      "com.bespectacled.classicbeaches.ClassicBeaches"
     ]
   },
   "mixins": [
-    "betterbeaches.mixins.json"
+    "classicbeaches.mixins.json"
   ],
 
   "depends": {

@@ -1,8 +1,8 @@
-package com.bespectacled.betterbeaches.mixin;
+package com.bespectacled.classicbeaches.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 
-import com.bespectacled.betterbeaches.surfacebuilder.SurfaceBuilders;
+import com.bespectacled.classicbeaches.surfacebuilder.SurfaceBuilders;
 
 import net.minecraft.world.gen.surfacebuilder.ConfiguredSurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.ConfiguredSurfaceBuilders;

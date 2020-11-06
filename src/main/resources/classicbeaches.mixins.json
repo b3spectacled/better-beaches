@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.bespectacled.betterbeaches.mixin",
+  "package": "com.bespectacled.classicbeaches.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "MixinConfiguredSurfaceBuilders"
