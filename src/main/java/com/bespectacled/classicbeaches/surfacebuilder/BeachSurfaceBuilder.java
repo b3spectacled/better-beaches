@@ -61,8 +61,6 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
         boolean genSand = sandNoise > 5D;
         boolean genGravel = gravelNoise > 20D;
         
-        if (genSand) System.out.println("Sand noise: " + sandNoise);
-        
         int genStone = (int)(stoneNoise / 3.0 + 3.0 + random.nextDouble() * 0.25);
         
         BlockPos.Mutable pos = new BlockPos.Mutable();
