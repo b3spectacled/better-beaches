@@ -1,4 +1,4 @@
-# Better Beaches
+# Classic Beaches
 
 ## License
 
