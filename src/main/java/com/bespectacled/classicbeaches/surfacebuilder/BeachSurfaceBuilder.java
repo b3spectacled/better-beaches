@@ -12,6 +12,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.noise.OctavePerlinNoiseSampler;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.Category;
+import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.world.biome.BuiltinBiomes;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
@@ -39,12 +42,12 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
         Biome biome, 
         int x, 
         int z, 
-        int integer7, 
+        int worldHeight, 
         double stoneNoise, 
         BlockState defaultBlock, 
         BlockState defaultFluid, 
         int fluidLevel, 
-        long long13, 
+        long seed, 
         TernarySurfaceConfig ternarySurfaceConfig
     ) {
         int seaLevel = fluidLevel;
@@ -55,21 +58,27 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
         //boolean genSand = this.noise.sample(x * 0.03125, z * 0.03125, 0.0, eighth, eighth, false) * 75D + random.nextDouble() > 0.0D;
         //boolean genGravel = this.noise.sample(x * 0.03125, 109.0, z * 0.03125, eighth, eighth, false) * 75D + random.nextDouble() > 3.0D;
         
+        double sandThreshold = 5D;
+        
+        if (biome.getCategory() == Category.BEACH) {
+            //sandThreshold = -10D;
+        }
+        
         double sandNoise = this.noise.sample(x * 0.03125, z * 0.03125, 0.0) * 75D + random.nextDouble();
         double gravelNoise = this.noise.sample(x * 0.03125, 109.0, z * 0.03125) * 75D + random.nextDouble();
-        
-        boolean genSand = sandNoise > 5D;
+
+        boolean genSand = sandNoise > sandThreshold;
         boolean genGravel = gravelNoise > 20D;
         
         int genStone = (int)(stoneNoise / 3.0 + 3.0 + random.nextDouble() * 0.25);
-        
+
         BlockPos.Mutable pos = new BlockPos.Mutable();
         int flag = -1;
         
         BlockState topBlock = ternarySurfaceConfig.getTopMaterial();
         BlockState fillerBlock = ternarySurfaceConfig.getUnderMaterial();
         
-        for (int y = 127; y >= 0; --y) {
+        for (int y = worldHeight; y >= 0; --y) {
             pos.set(relX, y, relZ);
             BlockState thisBlock = chunk.getBlockState(pos);
             
