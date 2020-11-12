@@ -1,5 +1,8 @@
 package com.bespectacled.classicbeaches.surfacebuilder;
 
+import com.bespectacled.classicbeaches.ClassicBeaches;
+
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.surfacebuilder.ConfiguredSurfaceBuilder;
@@ -14,7 +17,7 @@ public class SurfaceBuilders {
         new ConfiguredSurfaceBuilder<TernarySurfaceConfig>(BEACH_SURFACE, SurfaceBuilder.GRASS_CONFIG);
     
     public static void register() {
-        Registry.register(Registry.SURFACE_BUILDER, "beach", BEACH_SURFACE);
-        Registry.register(BuiltinRegistries.CONFIGURED_SURFACE_BUILDER, "beach", CONF_BEACH_SURFACE);
+        Registry.register(Registry.SURFACE_BUILDER, new Identifier(ClassicBeaches.ID, "beach"), BEACH_SURFACE);
+        Registry.register(BuiltinRegistries.CONFIGURED_SURFACE_BUILDER, new Identifier(ClassicBeaches.ID, "beach"), CONF_BEACH_SURFACE);
     }
 }

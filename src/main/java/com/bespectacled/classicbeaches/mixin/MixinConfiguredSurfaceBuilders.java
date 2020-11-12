@@ -11,6 +11,8 @@ import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
 @Mixin(ConfiguredSurfaceBuilders.class)
 public class MixinConfiguredSurfaceBuilders {
+    /*
     @Shadow
     private static final ConfiguredSurfaceBuilder<TernarySurfaceConfig> GRASS = SurfaceBuilders.CONF_BEACH_SURFACE;
+    */
 }

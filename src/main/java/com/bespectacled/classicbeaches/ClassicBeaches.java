@@ -9,7 +9,7 @@ import com.bespectacled.classicbeaches.surfacebuilder.SurfaceBuilders;
 import net.fabricmc.api.ModInitializer;
 
 public class ClassicBeaches implements ModInitializer {
-    public static final String ID = "classic_beaches";
+    public static final String ID = "classicbeaches";
     public static final Logger LOGGER = LogManager.getLogger("ClassicBeaches");
     
     @Override

@@ -58,7 +58,7 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
         //boolean genSand = this.noise.sample(x * 0.03125, z * 0.03125, 0.0, eighth, eighth, false) * 75D + random.nextDouble() > 0.0D;
         //boolean genGravel = this.noise.sample(x * 0.03125, 109.0, z * 0.03125, eighth, eighth, false) * 75D + random.nextDouble() > 3.0D;
         
-        double sandThreshold = 5D;
+        double sandThreshold = 0D;
         
         if (biome.getCategory() == Category.BEACH) {
             //sandThreshold = -10D;
@@ -68,7 +68,7 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
         double gravelNoise = this.noise.sample(x * 0.03125, 109.0, z * 0.03125) * 75D + random.nextDouble();
 
         boolean genSand = sandNoise > sandThreshold;
-        boolean genGravel = gravelNoise > 20D;
+        boolean genGravel = gravelNoise > 10D;
         
         int genStone = (int)(stoneNoise / 3.0 + 3.0 + random.nextDouble() * 0.25);
 
