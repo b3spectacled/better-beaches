@@ -22,7 +22,10 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.ConfiguredFeatures;
+import net.minecraft.world.gen.surfacebuilder.ConfiguredSurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
+import net.minecraft.world.gen.surfacebuilder.SurfaceConfig;
+import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
 @SuppressWarnings("deprecation")
 public class VanillaBiomeModifier {
@@ -52,8 +55,10 @@ public class VanillaBiomeModifier {
         Iterator biomeIter = BuiltinRegistries.BIOME.getEntries().iterator();
         while (biomeIter.hasNext()) {
             Entry<RegistryKey<Biome>, Biome> entry = (Entry<RegistryKey<Biome>, Biome>)biomeIter.next();
+            ConfiguredSurfaceBuilder<?> confBuilder = entry.getValue().getGenerationSettings().getSurfaceBuilder().get();
+            SurfaceConfig surfaceConfig = entry.getValue().getGenerationSettings().getSurfaceConfig();
             
-            if (!entry.getValue().getGenerationSettings().getSurfaceBuilder().get().surfaceBuilder.equals(SurfaceBuilder.DEFAULT)) {
+            if (!(confBuilder.surfaceBuilder.equals(SurfaceBuilder.DEFAULT) && surfaceConfig.equals(SurfaceBuilder.GRASS_CONFIG))) {
                 biomeList.add(entry.getKey());
             }
         }
