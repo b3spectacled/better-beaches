@@ -1,0 +1,30 @@
+{
+    "text.autoconfig.classicbeaches.title": "Classic Beaches Configuration",
+    
+    "text.autoconfig.classicbeaches.category.beach": "Beach Generation",
+    "text.autoconfig.classicbeaches.category.disk": "Disk Generation",
+    
+    "text.autoconfig.classicbeaches.option.generateBeaches": "Generate Beaches",
+    "text.autoconfig.classicbeaches.option.generateBeaches.@Tooltip": "Toggle beach generation. Requires restart.",
+    
+    "text.autoconfig.classicbeaches.option.generateBeachClay": "Generate Beach Clay",
+    "text.autoconfig.classicbeaches.option.generateBeachClay.@Tooltip": "Toggle clay ore generation in beaches. Requires restart.",
+    
+    "text.autoconfig.classicbeaches.option.generateHighGravelBeaches": "Generate High Gravel Beaches",
+    "text.autoconfig.classicbeaches.option.generateHighGravelBeaches.@Tooltip": "Generate gravel beaches at same height as sand beaches.",
+    
+    "text.autoconfig.classicbeaches.option.sandBeachThreshold": "Sand Beach Threshold",
+    "text.autoconfig.classicbeaches.option.sandBeachThreshold.@Tooltip": "Higher values will make sand beaches less common.",
+    
+    "text.autoconfig.classicbeaches.option.gravelBeachThreshold": "Gravel Beach Threshold",
+    "text.autoconfig.classicbeaches.option.gravelBeachThreshold.@Tooltip": "Higher values will make gravel beaches less common.",
+    
+    "text.autoconfig.classicbeaches.option.generateSandDisks": "Generate Sand Disks",
+    "text.autoconfig.classicbeaches.option.generateSandDisks.@Tooltip": "Toggle sand disk generation. Requires restart.",
+    
+    "text.autoconfig.classicbeaches.option.generateGravelDisks": "Generate Gravel Disks",
+    "text.autoconfig.classicbeaches.option.generateGravelDisks.@Tooltip": "Toggle gravel disk generation. Requires restart.",
+    
+    "text.autoconfig.classicbeaches.option.generateClayDisks": "Generate Clay Disks",
+    "text.autoconfig.classicbeaches.option.generateClayDisks.@Tooltip": "Toggle clay disk generation. Requires restart."
+}

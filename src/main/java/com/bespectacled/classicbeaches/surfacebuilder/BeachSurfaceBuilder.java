@@ -3,8 +3,7 @@ package com.bespectacled.classicbeaches.surfacebuilder;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import org.spongepowered.asm.mixin.Overwrite;
-
+import com.bespectacled.classicbeaches.ClassicBeaches;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.block.BlockState;
@@ -12,16 +11,12 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.noise.OctavePerlinNoiseSampler;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.Category;
-import net.minecraft.world.biome.BiomeKeys;
-import net.minecraft.world.biome.BuiltinBiomes;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
 public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
-
     private static final BlockState STONE = Blocks.STONE.getDefaultState();
     private static final BlockState AIR = Blocks.AIR.getDefaultState();
     private static final BlockState GRAVEL = Blocks.GRAVEL.getDefaultState();
@@ -43,40 +38,36 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
         int x, 
         int z, 
         int worldHeight, 
-        double stoneNoise, 
+        double surfaceNoise, 
         BlockState defaultBlock, 
         BlockState defaultFluid, 
         int fluidLevel, 
         long seed, 
         TernarySurfaceConfig ternarySurfaceConfig
     ) {
+        double sandBeachThreshold = ClassicBeaches.CONFIG.sandBeachThreshold;
+        double gravelBeachThreshold = ClassicBeaches.CONFIG.gravelBeachThreshold;
+        boolean generateHighGravelBeaches = ClassicBeaches.CONFIG.generateHighGravelBeaches;
+        
         int seaLevel = fluidLevel;
         int relX = x & 0xF;
         int relZ = z & 0xF;
         double eighth = 0.03125;
-        
-        //boolean genSand = this.noise.sample(x * 0.03125, z * 0.03125, 0.0, eighth, eighth, false) * 75D + random.nextDouble() > 0.0D;
-        //boolean genGravel = this.noise.sample(x * 0.03125, 109.0, z * 0.03125, eighth, eighth, false) * 75D + random.nextDouble() > 3.0D;
-        
-        double sandThreshold = 0D;
-        
-        if (biome.getCategory() == Category.BEACH) {
-            //sandThreshold = -10D;
-        }
-        
-        double sandNoise = this.noise.sample(x * 0.03125, z * 0.03125, 0.0) * 75D + random.nextDouble();
-        double gravelNoise = this.noise.sample(x * 0.03125, 109.0, z * 0.03125) * 75D + random.nextDouble();
 
-        boolean genSand = sandNoise > sandThreshold;
-        boolean genGravel = gravelNoise > 10D;
+        double sandNoise = this.noise.sample(x * eighth, z * eighth, 0.0) * 75D + random.nextDouble();
+        double gravelNoise = this.noise.sample(x * eighth, 109.0, z * eighth) * 75D + random.nextDouble();
+
+        boolean genSand = sandNoise > sandBeachThreshold;
+        boolean genGravel = gravelNoise > gravelBeachThreshold;
         
-        int genStone = (int)(stoneNoise / 3.0 + 3.0 + random.nextDouble() * 0.25);
+        int surfaceDepth = (int)(surfaceNoise / 3.0 + 3.0 + random.nextDouble() * 0.25);
 
         BlockPos.Mutable pos = new BlockPos.Mutable();
         int flag = -1;
         
         BlockState topBlock = ternarySurfaceConfig.getTopMaterial();
         BlockState fillerBlock = ternarySurfaceConfig.getUnderMaterial();
+        
         
         for (int y = worldHeight; y >= 0; --y) {
             pos.set(relX, y, relZ);
@@ -88,7 +79,7 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
             
             else if (thisBlock.isOf(defaultBlock.getBlock())) {
                 if (flag == -1) {
-                    if (genStone <= 0) {
+                    if (surfaceDepth <= 0) {
                         topBlock = AIR;
                         fillerBlock = STONE;
                     }
@@ -98,7 +89,7 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
                         fillerBlock = ternarySurfaceConfig.getUnderMaterial();
                         
                         if (genGravel) {
-                            topBlock = AIR;
+                            topBlock = generateHighGravelBeaches ? GRAVEL : AIR;
                             fillerBlock = GRAVEL;
                         }
                         
@@ -111,7 +102,7 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
                         topBlock = defaultFluid;
                     }
                     
-                    flag = genStone;
+                    flag = surfaceDepth;
                     if (y >= seaLevel - 1) {
                         chunk.setBlockState(pos, topBlock, false);
                     }
@@ -135,10 +126,11 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
     }
     
     @Override
-    public void initSeed(long long2) {
-        if (this.seed != long2 || this.noise == null) {
-            this.noise = new OctavePerlinNoiseSampler(new ChunkRandom(long2), IntStream.rangeClosed(-3, 0));
+    public void initSeed(long seed) {
+        if (this.seed != seed || this.noise == null) {
+            this.noise = new OctavePerlinNoiseSampler(new ChunkRandom(seed), IntStream.rangeClosed(-3, 0));
         }
-        this.seed = long2;
+        
+        this.seed = seed;
     }
 }

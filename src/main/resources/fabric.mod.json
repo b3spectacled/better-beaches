@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "com.bespectacled.classicbeaches.ClassicBeaches"
+    ],
+    "modmenu": [
+      "com.bespectacled.classicbeaches.config.ClassicBeachesModMenu"
     ]
   },
   "mixins": [
