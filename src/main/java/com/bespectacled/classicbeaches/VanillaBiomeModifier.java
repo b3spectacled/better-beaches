@@ -73,7 +73,7 @@ public class VanillaBiomeModifier {
         BiomeModifications.addFeature(
             ALL_BIOMES_BUT_DESERT, 
             GenerationStep.Feature.UNDERGROUND_ORES, 
-            RegistryKey.of(Registry.CONFIGURED_FEATURE_WORLDGEN, ORE_CLAY)
+            RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, ORE_CLAY)
         );
     }
 }

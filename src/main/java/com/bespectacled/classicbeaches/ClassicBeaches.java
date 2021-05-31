@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.bespectacled.classicbeaches.config.ClassicBeachesConfig;
+import com.bespectacled.classicbeaches.feature.ConfiguredFeatures;
 import com.bespectacled.classicbeaches.surfacebuilder.SurfaceBuilders;
 
 import me.shedaniel.autoconfig.AutoConfig;
@@ -26,6 +27,7 @@ public class ClassicBeaches implements ModInitializer {
         LOGGER.log(Level.INFO, "Initializing Classic Beaches...");
         
         SurfaceBuilders.register();
+        ConfiguredFeatures.register();
 
         if (CONFIG.generateBeaches)
             VanillaBiomeModifier.modifySurfaces();

@@ -37,11 +37,12 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
         Biome biome, 
         int x, 
         int z, 
-        int worldHeight, 
+        int height, 
         double surfaceNoise, 
         BlockState defaultBlock, 
         BlockState defaultFluid, 
-        int fluidLevel, 
+        int seaLevel,
+        int minimumHeight,
         long seed, 
         TernarySurfaceConfig ternarySurfaceConfig
     ) {
@@ -49,7 +50,6 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
         double gravelBeachThreshold = ClassicBeaches.CONFIG.gravelBeachThreshold;
         boolean generateHighGravelBeaches = ClassicBeaches.CONFIG.generateHighGravelBeaches;
         
-        int seaLevel = fluidLevel;
         int relX = x & 0xF;
         int relZ = z & 0xF;
         double eighth = 0.03125;
@@ -69,7 +69,7 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
         BlockState fillerBlock = ternarySurfaceConfig.getUnderMaterial();
         
         
-        for (int y = worldHeight; y >= 0; --y) {
+        for (int y = height; y >= minimumHeight; --y) {
             pos.set(relX, y, relZ);
             BlockState thisBlock = chunk.getBlockState(pos);
             
