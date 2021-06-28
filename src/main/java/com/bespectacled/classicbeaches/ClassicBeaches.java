@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.bespectacled.classicbeaches.compat.ExcludedBiomes;
 import com.bespectacled.classicbeaches.config.ClassicBeachesConfig;
 import com.bespectacled.classicbeaches.feature.ConfiguredFeatures;
 import com.bespectacled.classicbeaches.surfacebuilder.SurfaceBuilders;
@@ -15,6 +16,7 @@ import net.minecraft.util.Identifier;
 
 public class ClassicBeaches implements ModInitializer {
     public static final String MOD_ID = "classicbeaches";
+    public static final String MOD_NAME = "Classic Beaches";
     public static final Logger LOGGER = LogManager.getLogger("ClassicBeaches");
     public static final ClassicBeachesConfig CONFIG = AutoConfig.register(ClassicBeachesConfig.class, GsonConfigSerializer::new).getConfig();
     
@@ -22,20 +24,28 @@ public class ClassicBeaches implements ModInitializer {
         return new Identifier(MOD_ID, name);
     }
     
+    public static void log(Level level, String message) {
+        LOGGER.log(level, "[" + MOD_NAME + "] {}", message);
+    }
+    
     @Override
     public void onInitialize() {
-        LOGGER.log(Level.INFO, "Initializing Classic Beaches...");
+        log(Level.INFO, "Initializing Classic Beaches...");
         
+        // Main SurfaceBuilder and Feature Registration
         SurfaceBuilders.register();
         ConfiguredFeatures.register();
 
+        // Mod Compatibility
+        ExcludedBiomes.addModCompat();
+
         if (CONFIG.generateBeaches)
-            VanillaBiomeModifier.modifySurfaces();
+            BiomeModifier.modifySurfaces();
         
         if (CONFIG.generateBeachClay)
-            VanillaBiomeModifier.addClayOre();
+            BiomeModifier.addClayOre();
         
-        VanillaBiomeModifier.removeDisks(
+        BiomeModifier.removeDisks(
             CONFIG.generateSandDisks,
             CONFIG.generateGravelDisks,
             CONFIG.generateClayDisks

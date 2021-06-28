@@ -3,7 +3,9 @@ package com.bespectacled.classicbeaches;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.bespectacled.classicbeaches.compat.ExcludedBiomes;
 import com.bespectacled.classicbeaches.surfacebuilder.SurfaceBuilders;
+
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -18,7 +20,7 @@ import net.minecraft.world.gen.feature.ConfiguredFeatures;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 
 @SuppressWarnings("deprecation")
-public class VanillaBiomeModifier {
+public class BiomeModifier {
     private static final Predicate<BiomeSelectionContext> ALL_BIOMES = BiomeSelectors.all();
     private static final Predicate<BiomeSelectionContext> ALL_BIOMES_BUT_DESERT = BiomeSelectors.categories(Category.DESERT).negate();
     private static final Predicate<BiomeSelectionContext> ALL_BIOMES_WITH_DEFAULT_SURFACE =
@@ -27,11 +29,15 @@ public class VanillaBiomeModifier {
                 .stream()
                 .filter(e -> 
                     e.getValue().getGenerationSettings().getSurfaceConfig().equals(SurfaceBuilder.GRASS_CONFIG) && 
-                    e.getValue().getGenerationSettings().getSurfaceBuilder().get().surfaceBuilder.equals(SurfaceBuilder.DEFAULT))
+                    e.getValue().getGenerationSettings().getSurfaceBuilder().get().surfaceBuilder.equals(SurfaceBuilder.DEFAULT) &&
+                    !ExcludedBiomes.getExcludedBiomes().contains(e.getKey()))
                 .map(e -> e.getKey())
                 .collect(Collectors.toList())
         ));
-    private static final Predicate<BiomeSelectionContext> BEACH_BIOMES = BiomeSelectors.categories(Category.BEACH);
+    private static final Predicate<BiomeSelectionContext> BEACH_BIOMES = BiomeSelectors.includeByKey(
+        RegistryKey.of(Registry.BIOME_KEY, new Identifier("beach")),
+        RegistryKey.of(Registry.BIOME_KEY, new Identifier("snowy_beach"))
+    );
     
     private static final Identifier REPLACE_BEACH_SURFACE = new Identifier(ClassicBeaches.MOD_ID, "replace_beach_surface");
     private static final Identifier REPLACE_DEFAULT_SURFACE = new Identifier(ClassicBeaches.MOD_ID, "replace_default_surface");
