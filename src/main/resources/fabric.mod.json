@@ -13,7 +13,7 @@
     "sources": "https://github.com/b3spectacled/classic-beaches"
   },
 
-  "license": "LGPLv3",
+  "license": "MIT",
   "icon": "assets/classicbeaches/icon.png",
 
   "environment": "*",
