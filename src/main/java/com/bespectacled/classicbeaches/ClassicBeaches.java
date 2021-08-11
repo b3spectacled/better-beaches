@@ -4,7 +4,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.bespectacled.classicbeaches.compat.ExcludedBiomes;
 import com.bespectacled.classicbeaches.config.ClassicBeachesConfig;
 import com.bespectacled.classicbeaches.feature.ConfiguredFeatures;
 import com.bespectacled.classicbeaches.surfacebuilder.SurfaceBuilders;
@@ -35,9 +34,6 @@ public class ClassicBeaches implements ModInitializer {
         // Main SurfaceBuilder and Feature Registration
         SurfaceBuilders.register();
         ConfiguredFeatures.register();
-
-        // Mod Compatibility
-        ExcludedBiomes.addModCompat();
 
         if (CONFIG.generateBeaches)
             BiomeModifier.modifySurfaces();

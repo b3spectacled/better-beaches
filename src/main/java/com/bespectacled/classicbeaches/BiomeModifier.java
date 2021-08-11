@@ -1,9 +1,9 @@
 package com.bespectacled.classicbeaches;
 
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.bespectacled.classicbeaches.compat.ExcludedBiomes;
 import com.bespectacled.classicbeaches.surfacebuilder.SurfaceBuilders;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -14,39 +14,37 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.Category;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.ConfiguredFeatures;
-import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
+import net.minecraft.world.gen.surfacebuilder.ConfiguredSurfaceBuilder;
+import net.minecraft.world.gen.surfacebuilder.ConfiguredSurfaceBuilders;
 
 @SuppressWarnings("deprecation")
 public class BiomeModifier {
+    private static final Set<RegistryKey<Biome>> EXCLUDED_BIOMES = ClassicBeaches.CONFIG.excludedBiomes
+        .stream()
+        .map(b -> RegistryKey.of(Registry.BIOME_KEY, new Identifier(b)))
+        .collect(Collectors.toSet());
+    
+    private static final Set<RegistryKey<Biome>> OVERRIDDEN_BIOMES = ClassicBeaches.CONFIG.overriddenBiomes
+        .stream()
+        .map(b -> RegistryKey.of(Registry.BIOME_KEY, new Identifier(b)))
+        .collect(Collectors.toSet());
+    
     private static final Predicate<BiomeSelectionContext> ALL_BIOMES = BiomeSelectors.all();
-    private static final Predicate<BiomeSelectionContext> ALL_BIOMES_BUT_DESERT = BiomeSelectors.categories(Category.DESERT).negate();
-    private static final Predicate<BiomeSelectionContext> ALL_BIOMES_WITH_DEFAULT_SURFACE =
-        ALL_BIOMES.and(BiomeSelectors.includeByKey(
-            BuiltinRegistries.BIOME.getEntries()
-                .stream()
-                .filter(e -> 
-                    e.getValue().getGenerationSettings().getSurfaceConfig().equals(SurfaceBuilder.GRASS_CONFIG) && 
-                    e.getValue().getGenerationSettings().getSurfaceBuilder().get().surfaceBuilder.equals(SurfaceBuilder.DEFAULT) &&
-                    !ExcludedBiomes.getExcludedBiomes().contains(e.getKey()))
-                .map(e -> e.getKey())
-                .collect(Collectors.toList())
-        ));
-    private static final Predicate<BiomeSelectionContext> BEACH_BIOMES = BiomeSelectors.includeByKey(
-        RegistryKey.of(Registry.BIOME_KEY, new Identifier("beach")),
-        RegistryKey.of(Registry.BIOME_KEY, new Identifier("snowy_beach"))
-    );
+    private static final Predicate<BiomeSelectionContext> ALL_BIOMES_BUT_DESERT_CATEGORY = BiomeSelectors.categories(Category.DESERT).negate();
+    private static final Predicate<BiomeSelectionContext> BIOMES_WITH_NONDEFAULT_SURFACE = BiomeSelectors.includeByKey(OVERRIDDEN_BIOMES);
     
-    private static final Identifier REPLACE_BEACH_SURFACE = new Identifier(ClassicBeaches.MOD_ID, "replace_beach_surface");
-    private static final Identifier REPLACE_DEFAULT_SURFACE = new Identifier(ClassicBeaches.MOD_ID, "replace_default_surface");
+    private static final Identifier REPLACE_NONDEFAULT_SURFACE = ClassicBeaches.createId("replace_nondefault_surface");
+    private static final Identifier REPLACE_DEFAULT_SURFACE_GRASS = ClassicBeaches.createId("replace_default_surface_grass");
     
-    private static final Identifier REMOVE_DISK_SAND = new Identifier(ClassicBeaches.MOD_ID, "remove_disk_sand");
-    private static final Identifier REMOVE_DISK_GRAV = new Identifier(ClassicBeaches.MOD_ID, "remove_disk_gravel");
-    private static final Identifier REMOVE_DISK_CLAY = new Identifier(ClassicBeaches.MOD_ID, "remove_disk_clay");
+    private static final Identifier REMOVE_DISK_SAND = ClassicBeaches.createId("remove_disk_sand");
+    private static final Identifier REMOVE_DISK_GRAV = ClassicBeaches.createId("remove_disk_gravel");
+    private static final Identifier REMOVE_DISK_CLAY = ClassicBeaches.createId("remove_disk_clay");
     
-    private static final Identifier ORE_CLAY = new Identifier(ClassicBeaches.MOD_ID, "ore_clay");
+    private static final Identifier ORE_CLAY = ClassicBeaches.createId("ore_clay");
     
     public static void removeDisks(boolean generateDiskSand, boolean generateDiskGravel, boolean generateDiskClay) {
         if (!generateDiskSand)
@@ -66,20 +64,40 @@ public class BiomeModifier {
     }
     
     public static void modifySurfaces() {
-        BiomeModifications.create(REPLACE_BEACH_SURFACE).add(ModificationPhase.POST_PROCESSING, BEACH_BIOMES, context -> {
-            context.getGenerationSettings().setBuiltInSurfaceBuilder(SurfaceBuilders.CONF_BEACH_SURFACE);
-        });
+        BiomeModifications.create(REPLACE_NONDEFAULT_SURFACE).add(
+            ModificationPhase.POST_PROCESSING, 
+            BIOMES_WITH_NONDEFAULT_SURFACE, 
+            context -> {
+                context.getGenerationSettings().setBuiltInSurfaceBuilder(SurfaceBuilders.CONF_BEACH_SURFACE_GRASS);
+            }
+        );
         
-        BiomeModifications.create(REPLACE_DEFAULT_SURFACE).add(ModificationPhase.POST_PROCESSING, ALL_BIOMES_WITH_DEFAULT_SURFACE, context -> {
-            context.getGenerationSettings().setBuiltInSurfaceBuilder(SurfaceBuilders.CONF_BEACH_SURFACE); 
-        });
+        BiomeModifications.create(REPLACE_DEFAULT_SURFACE_GRASS).add(
+            ModificationPhase.POST_PROCESSING, 
+            getDefaultSurfaceBiomeSelector(ConfiguredSurfaceBuilders.GRASS), 
+            context -> {
+                context.getGenerationSettings().setBuiltInSurfaceBuilder(SurfaceBuilders.CONF_BEACH_SURFACE_GRASS); 
+            }
+        );
     }
     
     public static void addClayOre() {
         BiomeModifications.addFeature(
-            ALL_BIOMES_BUT_DESERT, 
+            ALL_BIOMES_BUT_DESERT_CATEGORY, 
             GenerationStep.Feature.UNDERGROUND_ORES, 
             RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, ORE_CLAY)
         );
+    }
+    
+    private static Predicate<BiomeSelectionContext> getDefaultSurfaceBiomeSelector(ConfiguredSurfaceBuilder<?> configuredSurfaceBuilder) {
+        return ALL_BIOMES.and(BiomeSelectors.includeByKey(
+            BuiltinRegistries.BIOME.getEntries()
+                .stream()
+                .filter(e -> 
+                    e.getValue().getGenerationSettings().getSurfaceBuilder().get().equals(configuredSurfaceBuilder) &&
+                    !EXCLUDED_BIOMES.contains(e.getKey()))
+                .map(e -> e.getKey())
+                .collect(Collectors.toList())
+        ));
     }
 }
