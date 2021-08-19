@@ -16,7 +16,7 @@ import net.minecraft.world.gen.feature.OreFeatureConfig;
 public class ConfiguredFeatures {
     public static final Identifier ORE_CLAY_ID = ClassicBeaches.createId("ore_clay");
     
-    private static final ConfiguredFeature<?, ?> ORE_CLAY = ((Feature.ORE.configure(new OreFeatureConfig(new BlockMatchRuleTest(Blocks.SAND), Blocks.CLAY.getDefaultState(), 33)).uniformRange(YOffset.fixed(0), YOffset.fixed(127))).spreadHorizontally().repeat(1));
+    public static final ConfiguredFeature<?, ?> ORE_CLAY = ((Feature.ORE.configure(new OreFeatureConfig(new BlockMatchRuleTest(Blocks.SAND), Blocks.CLAY.getDefaultState(), 33)).uniformRange(YOffset.fixed(0), YOffset.fixed(127))).spreadHorizontally().repeat(1));
     
     public static void register() {
         register(ORE_CLAY_ID, ORE_CLAY);

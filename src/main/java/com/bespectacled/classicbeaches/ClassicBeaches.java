@@ -34,18 +34,6 @@ public class ClassicBeaches implements ModInitializer {
         // Main SurfaceBuilder and Feature Registration
         SurfaceBuilders.register();
         ConfiguredFeatures.register();
-
-        if (CONFIG.generateBeaches)
-            BiomeModifier.modifySurfaces();
-        
-        if (CONFIG.generateBeachClay)
-            BiomeModifier.addClayOre();
-        
-        BiomeModifier.removeDisks(
-            CONFIG.generateSandDisks,
-            CONFIG.generateGravelDisks,
-            CONFIG.generateClayDisks
-        );
     }
 
 }

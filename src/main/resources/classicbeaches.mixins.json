@@ -3,7 +3,11 @@
   "minVersion": "0.8",
   "package": "com.bespectacled.classicbeaches.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [],
+  "mixins": [
+  	"MixinConfiguredSurfaceBuilders",
+  	"MixinDefaultBiomeCreator",
+  	"MixinDefaultBiomeFeatures"
+  ],
   "client": [],
   "injectors": {
     "defaultRequire": 1
