@@ -40,11 +40,11 @@ public class ClassicBeachesConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip(count = 1)
     public boolean generateClayDisks = false;
     
-    @ConfigEntry.Category(value = "compat")
+    @ConfigEntry.Category(value = "beach")
     @ConfigEntry.Gui.Excluded
     public List<String> excludedBiomes = List.of();
     
-    @ConfigEntry.Category(value = "compat")
+    @ConfigEntry.Category(value = "beach")
     @ConfigEntry.Gui.Excluded
     public List<String> overriddenBiomes = List.of(
         "minecraft:beach",
