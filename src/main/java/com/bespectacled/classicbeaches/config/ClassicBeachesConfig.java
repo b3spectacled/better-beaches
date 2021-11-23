@@ -1,5 +1,9 @@
 package com.bespectacled.classicbeaches.config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -37,5 +41,16 @@ public class ClassicBeachesConfig implements ConfigData {
     @ConfigEntry.Category(value = "disk")
     @ConfigEntry.Gui.Tooltip(count = 1)
     public boolean generateClayDisks = false;
+    
+    @ConfigEntry.Category(value = "beach")
+    @ConfigEntry.Gui.Excluded
+    public List<String> excludedBiomes = new ArrayList<>();
+    
+    @ConfigEntry.Category(value = "beach")
+    @ConfigEntry.Gui.Excluded
+    public List<String> overriddenBiomes = Arrays.asList(
+        "minecraft:beach",
+        "minecraft:snowy_beach"
+    );
     
 }

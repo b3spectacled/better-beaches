@@ -20,8 +20,12 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
     private static final BlockState STONE = Blocks.STONE.getDefaultState();
     private static final BlockState AIR = Blocks.AIR.getDefaultState();
     private static final BlockState GRAVEL = Blocks.GRAVEL.getDefaultState();
+    
     private static final BlockState SAND = Blocks.SAND.getDefaultState();
     private static final BlockState SANDSTONE = Blocks.SANDSTONE.getDefaultState();
+    
+    private static final BlockState RED_SAND = Blocks.RED_SAND.getDefaultState();
+    private static final BlockState RED_SANDSTONE = Blocks.RED_SANDSTONE.getDefaultState();
     
     protected long seed;
     protected OctavePerlinNoiseSampler noise;
@@ -41,7 +45,7 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
         double surfaceNoise, 
         BlockState defaultBlock, 
         BlockState defaultFluid, 
-        int fluidLevel, 
+        int seaLevel, 
         long seed, 
         TernarySurfaceConfig ternarySurfaceConfig
     ) {
@@ -49,7 +53,6 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
         double gravelBeachThreshold = ClassicBeaches.CONFIG.gravelBeachThreshold;
         boolean generateHighGravelBeaches = ClassicBeaches.CONFIG.generateHighGravelBeaches;
         
-        int seaLevel = fluidLevel;
         int relX = x & 0xF;
         int relZ = z & 0xF;
         double eighth = 0.03125;
@@ -68,7 +71,6 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
         BlockState topBlock = ternarySurfaceConfig.getTopMaterial();
         BlockState fillerBlock = ternarySurfaceConfig.getUnderMaterial();
         
-        
         for (int y = worldHeight; y >= 0; --y) {
             pos.set(relX, y, relZ);
             BlockState thisBlock = chunk.getBlockState(pos);
@@ -79,12 +81,12 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
             
             else if (thisBlock.isOf(defaultBlock.getBlock())) {
                 if (flag == -1) {
+                    flag = surfaceDepth;
+                    
                     if (surfaceDepth <= 0) {
                         topBlock = AIR;
                         fillerBlock = STONE;
-                    }
-                    
-                    else if (y >= seaLevel - 4 && y <= seaLevel + 1) {
+                    } else if (y >= seaLevel - 4 && y <= seaLevel + 1) {
                         topBlock = ternarySurfaceConfig.getTopMaterial();
                         fillerBlock = ternarySurfaceConfig.getUnderMaterial();
                         
@@ -98,15 +100,15 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
                             fillerBlock = SAND;
                         }
                     }
+                    
+                    // Fill in air with fluid when generating gravel beaches
                     if (y < seaLevel && topBlock.isAir()) {
                         topBlock = defaultFluid;
                     }
                     
-                    flag = surfaceDepth;
                     if (y >= seaLevel - 1) {
                         chunk.setBlockState(pos, topBlock, false);
-                    }
-                    else {
+                    } else {
                         chunk.setBlockState(pos, fillerBlock, false);
                     }
                 }
@@ -119,6 +121,9 @@ public class BeachSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
                     if (flag == 0 && fillerBlock.equals(SAND)) {
                         flag = random.nextInt(4);
                         fillerBlock = SANDSTONE;
+                    } else if (flag == 0 && fillerBlock.equals(RED_SAND)) {
+                        flag = random.nextInt(4);
+                        fillerBlock = RED_SANDSTONE;
                     }
                 }
             }
